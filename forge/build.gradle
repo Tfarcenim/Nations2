@@ -79,6 +79,15 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":common")
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+
+    compileOnly fg.deobf(group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_forge, changing: true)
+    implementation fg.deobf("maven.modrinth:journeymap:${project.jm_forge}")
+
+   // implementation fg.deobf('com.github.sciwhiz12:Concord:v1.6.3+forgecraft.4')
+
+    implementation fileTree(dir: 'libs', include: '*.jar')
+
+
 }
 
 tasks.withType(JavaCompile).configureEach {

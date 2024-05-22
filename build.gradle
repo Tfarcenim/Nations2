@@ -48,6 +48,28 @@ subprojects {
             name = 'BlameJared Maven (JEI / CraftTweaker / Bookshelf)'
             url = 'https://maven.blamejared.com'
         }
+
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+            content {
+                includeGroup "maven.modrinth"
+            }
+        }
+
+        maven {
+            url "https://jm.gserv.me/repository/maven-public/"
+            content {
+                includeGroup "info.journeymap"
+            }
+        }
+        maven { url 'https://jitpack.io' }
+
+        flatDir {
+            dirs 'libs'
+        }
+
+
     }
 
     tasks.withType(JavaCompile).configureEach {
