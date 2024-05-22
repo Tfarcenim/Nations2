@@ -7,7 +7,7 @@
     "mixins": [
     ],
     "client": [
-        "MixinTitleScreen"
+      "tfar.nations2.mixin.MixinTitleScreen"
     ],
     "server": [
     ],

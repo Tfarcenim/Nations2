@@ -1,6 +1,6 @@
-package com.example.examplemod.mixin;
+package tfar.nations2.mixin;
 
-import com.example.examplemod.CommonClass;
+import tfar.nations2.Nations2;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,7 +13,7 @@ public class MixinMinecraft {
     @Inject(at = @At("TAIL"), method = "<init>")
     private void init(CallbackInfo info) {
         
-        CommonClass.LOG.info("This line is printed by an example mod common mixin!");
-        CommonClass.LOG.info("MC Version: {}", Minecraft.getInstance().getVersionType());
+        Nations2.LOG.info("This line is printed by an example mod common mixin!");
+        Nations2.LOG.info("MC Version: {}", Minecraft.getInstance().getVersionType());
     }
 }
