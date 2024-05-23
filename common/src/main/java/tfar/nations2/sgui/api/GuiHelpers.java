@@ -1,5 +1,8 @@
 package tfar.nations2.sgui.api;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,8 +13,12 @@ import tfar.nations2.sgui.impl.PlayerExtensions;
 import tfar.nations2.sgui.virtual.VirtualScreenHandlerInterface;
 
 import javax.annotation.Nullable;
+import java.util.function.UnaryOperator;
 
 public final class GuiHelpers {
+
+    public static final UnaryOperator<Style> STYLE_CLEARER = style -> style.withItalic(style.isItalic()).withColor(style.getColor() != null ? style.getColor() : TextColor.fromLegacyFormat(ChatFormatting.WHITE));
+
     @Nullable
     public static GuiInterface getCurrentGui(ServerPlayer player) {
         return player.containerMenu instanceof VirtualScreenHandlerInterface v ? v.getGui() : null;

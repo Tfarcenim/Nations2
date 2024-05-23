@@ -1,5 +1,9 @@
 package tfar.nations2.platform.services;
 
+import com.mojang.authlib.GameProfile;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+
 public interface IPlatformHelper {
 
     /**
@@ -33,4 +37,7 @@ public interface IPlatformHelper {
 
         return isDevelopmentEnvironment() ? "development" : "production";
     }
+
+    ServerPlayer getFakePlayer(ServerLevel level, GameProfile gameProfile);
+
 }
