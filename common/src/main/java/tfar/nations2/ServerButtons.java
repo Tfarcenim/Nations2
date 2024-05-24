@@ -316,10 +316,10 @@ public class ServerButtons {
     public static GuiElementBuilder claimChunksButton1(ServerPlayer player, NationData nationData, Nation existingNation) {
         return new GuiElementBuilder()
                 .setItem(Items.WHITE_BANNER)
-                .setName(Component.literal("Claim land v1"))
+                .setName(ModComponents.CLAIM_LAND)
                 .setCallback((index, type, action) -> {
                     SimpleGui claimGui = new SimpleGui(MenuType.GENERIC_9x6, player, false);
-                    claimGui.setTitle(Component.literal("Claim land v1"));
+                    claimGui.setTitle(ModComponents.CLAIM_LAND);
                     ChunkPos chunkPos = new ChunkPos(player.blockPosition());
                     int index1 = 0;
                     for (int z = -2; z < 4; z++) {
@@ -354,14 +354,14 @@ public class ServerButtons {
                                                 ItemStack newClaim = new ItemStack(Items.GREEN_STAINED_GLASS_PANE);
                                                 if (glow) {
                                                     newClaim.enchant(Enchantments.UNBREAKING, 0);
-                                                    newClaim.getTag().putByte("HideFlags", (byte) ItemStack.TooltipPart.ENCHANTMENTS.getMask());
+                                                    newClaim.getTag().putByte(Nations2.TAG_HIDE_FLAGS, (byte) ItemStack.TooltipPart.ENCHANTMENTS.getMask());
                                                 }
                                                 newClaim.setHoverName(Component.literal(existingNation.getName() + " (" + offset.x + "," + offset.z + ")")
                                                         .withStyle(GuiHelpers.STYLE_CLEARER));
                                                 ((GuiElement) slot).setItemStack(newClaim);
                                                 nationData.addClaim(existingNation, offset);
                                             } else {
-                                                player.sendSystemMessage(Component.literal("Insufficient nation power"));
+                                                player.sendSystemMessage(ModComponents.INSUFFICIENT_NATION_POWER);
                                             }
 
                                         } else if (stack.is(Items.GREEN_STAINED_GLASS_PANE)) {
@@ -369,7 +369,7 @@ public class ServerButtons {
 
                                             if (glow) {
                                                 wilderness.enchant(Enchantments.UNBREAKING, 0);
-                                                wilderness.getTag().putByte("HideFlags", (byte) ItemStack.TooltipPart.ENCHANTMENTS.getMask());
+                                                wilderness.getTag().putByte(Nations2.TAG_HIDE_FLAGS, (byte) ItemStack.TooltipPart.ENCHANTMENTS.getMask());
                                             }
 
                                             nationData.removeClaim(existingNation, offset);
@@ -393,10 +393,10 @@ public class ServerButtons {
     public static GuiElementBuilder unClaimChunksButton1(ServerPlayer player, NationData nationData, Nation existingNation) {
         return new GuiElementBuilder()
                 .setItem(Items.WHITE_BANNER)
-                .setName(Component.literal("Unclaim land"))
+                .setName(ModComponents.UNCLAIM_LAND)
                 .setCallback((index, type, action) -> {
                     SimpleGui claimGui = new SimpleGui(MenuType.GENERIC_9x6, player, false);
-                    claimGui.setTitle(Component.literal("Unclaim land"));
+                    claimGui.setTitle(ModComponents.UNCLAIM_LAND);
                     ChunkPos chunkPos = new ChunkPos(player.blockPosition());
                     int index1 = 0;
                     for (int z = -2; z < 4; z++) {
@@ -429,7 +429,7 @@ public class ServerButtons {
 
                                             if (glow) {
                                                 wilderness.enchant(Enchantments.UNBREAKING, 0);
-                                                wilderness.getTag().putByte("HideFlags", (byte) ItemStack.TooltipPart.ENCHANTMENTS.getMask());
+                                                wilderness.getTag().putByte(Nations2.TAG_HIDE_FLAGS, (byte) ItemStack.TooltipPart.ENCHANTMENTS.getMask());
                                             }
 
                                             nationData.removeClaim(existingNation, offset);
@@ -453,10 +453,10 @@ public class ServerButtons {
     public static GuiElementBuilder claimChunksButton2(ServerPlayer player, NationData nationData, Nation existingNation) {
         return new GuiElementBuilder()
                 .setItem(Items.WHITE_BANNER)
-                .setName(Component.literal("Claim Land"))//v2
+                .setName(ModComponents.CLAIM_LAND)//v2
                 .setCallback((index, type, action) -> {
                     SimpleGui claimGui = new SimpleGui(MenuType.GENERIC_9x6, player, false);
-                    claimGui.setTitle(Component.literal("Claim Land"));//v2
+                    claimGui.setTitle(ModComponents.CLAIM_LAND);//v2
                     ChunkPos chunkPos = new ChunkPos(player.blockPosition());
                     int index1 = 0;
                     final Map<Integer,ChunkPos> slotmap = new HashMap<>();
@@ -486,7 +486,7 @@ public class ServerButtons {
                                         GuiElementInterface slot = claimGui.getSlot(index2);
                                         Nation checkNation = nationData.getNationAtChunk(offset);
                                         if (checkNation != null) {
-                                            player.sendSystemMessage(Component.literal("There's already a claim at this chunk"),false);
+                                            player.sendSystemMessage(ModComponents.ALREADY_A_CLAIM,false);
                                         } else {
                                             int yellowpos = -1;
                                             for (int i = 0; i < 54;i++) {

@@ -78,6 +78,9 @@ public class Nations2 {
     public static final Item NO = Items.RED_STAINED_GLASS_PANE;
     public static final Item BLANK = Items.LIGHT_GRAY_STAINED_GLASS_PANE;
 
+    public static final String TAG_HIDE_FLAGS = "HideFlags";
+
+
     public static void onCommandRegister(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal(MOD_ID)
                 .executes(Nations2::openGui)
@@ -221,7 +224,7 @@ public class Nations2 {
                 );
                 inviteGui.setSlot(4, new GuiElementBuilder()
                         .setItem(NO)
-                        .setName(Component.literal("No"))
+                        .setName(ModComponents.NO)
                         .setCallback((index, clickType, actionType) -> {
                             nationData.removeInvite(player);
                             inviteGui.close();
@@ -309,19 +312,19 @@ public class Nations2 {
                     );
                     confirmGui.setSlot(4, new GuiElementBuilder()
                             .setItem(NO)
-                            .setName(Component.literal("No"))
+                            .setName(ModComponents.NO)
                             .setCallback((index1, clickType1, actionType1) -> confirmGui.close())
                     );
                     confirmGui.open();
                 }));
 
         teamLeaderMenu.setSlot(1, ServerButtons.managePlayersButton(player, nationData, existingNation));
-        teamLeaderMenu.setSlot(2,ServerButtons.claimChunksButton2(player, nationData, existingNation));
+        teamLeaderMenu.setSlot(2,ServerButtons.claimChunksButton1(player, nationData, existingNation));
         teamLeaderMenu.setSlot(3,ServerButtons.unClaimChunksButton1(player, nationData, existingNation));
 
         teamLeaderMenu.setSlot(4, new GuiElementBuilder()
                 .setItem(Items.SHIELD)
-                .setName(Component.literal("Nation Politics"))
+                .setName(ModComponents.NATION_POLITICS)
                 .setCallback((index, type, action, gui) -> {
 
                     Nation allianceInvite = nationData.getAllianceInvite(existingNation);
@@ -341,7 +344,7 @@ public class Nations2 {
                         );
                         inviteGui.setSlot(4, new GuiElementBuilder()
                                 .setItem(NO)
-                                .setName(Component.literal("No"))
+                                .setName(ModComponents.NO)
                                 .setCallback((index1, clickType, actionType) -> {
                                     nationData.removeAllyInvite(allianceInvite, existingNation);
                                     inviteGui.close();
@@ -351,13 +354,13 @@ public class Nations2 {
                     } else {
 
                         SimpleGui politicsGui = new SimpleGui(MenuType.HOPPER, player, false);
-                        politicsGui.setTitle(Component.literal("Nation Politics"));
+                        politicsGui.setTitle(ModComponents.NATION_POLITICS);
                         politicsGui.setSlot(0, new GuiElementBuilder()
                                 .setItem(Items.FEATHER)
-                                .setName(Component.literal("Make Alliance"))
+                                .setName(ModComponents.MAKE_ALLIANCE)
                                 .setCallback((index1, type1, action1, gui1) -> {
                                     SimpleGui allianceGui = new SimpleGui(MenuType.GENERIC_9x3, player, false);
-                                    allianceGui.setTitle(Component.literal("Make Alliance"));
+                                    allianceGui.setTitle(ModComponents.MAKE_ALLIANCE);
                                     List<Nation> nonAlliedLeaders = nationData.getNonAllianceNations(existingNation);
                                     for (int i = 0; i < nonAlliedLeaders.size(); i++) {
                                         Nation nation = nonAlliedLeaders.get(i);
@@ -379,10 +382,10 @@ public class Nations2 {
                         politicsGui.setSlot(1, new GuiElementBuilder()
                                 .setItem(Items.NETHERITE_SWORD)
                                 .hideFlags()
-                                .setName(Component.literal("Make Enemy"))
+                                .setName(ModComponents.MAKE_ENEMY)
                                 .setCallback((index1, type1, action1, gui1) -> {
                                     SimpleGui enemyGui = new SimpleGui(MenuType.GENERIC_9x3, player, false);
-                                    enemyGui.setTitle(Component.literal("Make Enemy"));
+                                    enemyGui.setTitle(ModComponents.MAKE_ENEMY);
                                     List<Nation> nonAlliedLeaders = nationData.getNonEnemyNations(existingNation);
                                     for (int i = 0; i < nonAlliedLeaders.size(); i++) {
                                         Nation nation = nonAlliedLeaders.get(i);
@@ -402,11 +405,11 @@ public class Nations2 {
 
                         politicsGui.setSlot(2, new GuiElementBuilder()
                                 .setItem(Items.ENDER_EYE)
-                                .setName(Component.literal("Make Neutral"))
+                                .setName(ModComponents.MAKE_NEUTRAL)
                                 .setCallback((index1, type1, action1, gui1) -> {
 
                                     SimpleGui enemyGui = new SimpleGui(MenuType.GENERIC_9x3, player, false);
-                                    enemyGui.setTitle(Component.literal("Make Neutral"));
+                                    enemyGui.setTitle(ModComponents.MAKE_NEUTRAL);
                                     List<Nation> nonAlliedLeaders = nationData.getNonNeutralNations(existingNation);
                                     for (int i = 0; i < nonAlliedLeaders.size(); i++) {
                                         Nation nation = nonAlliedLeaders.get(i);
@@ -428,10 +431,10 @@ public class Nations2 {
 
                         politicsGui.setSlot(3, new GuiElementBuilder()
                                 .setItem(Items.BOOK)
-                                .setName(Component.literal("Nation Status"))
+                                .setName(ModComponents.NATION_STATUS)
                                 .setCallback((index1, type1, action1, gui1) -> {
                                     SimpleGui statusGui = new SimpleGui(MenuType.GENERIC_9x3, player, false);
-                                    statusGui.setTitle(Component.literal("Nation Status"));
+                                    statusGui.setTitle(ModComponents.NATION_STATUS);
                                     List<Nation> nonAlliedLeaders = nationData.getNonNeutralNations(existingNation);
                                     for (int i = 0; i < nonAlliedLeaders.size(); i++) {
                                         Nation nation = nonAlliedLeaders.get(i);
@@ -457,7 +460,7 @@ public class Nations2 {
                 .setName(Component.literal("Declare Siege"))
                 .setCallback((index, type, action, gui) -> {
                     SimpleGui raidGui = new SimpleGui(MenuType.GENERIC_9x3, player, false);
-                    raidGui.setTitle(Component.literal("Select Enemy Nation"));
+                    raidGui.setTitle(ModComponents.SELECT_ENEMY_NATION);
                     Set<String> enemies = existingNation.getEnemies();
                     int i = 0;
                     for (String s : enemies) {
@@ -512,8 +515,7 @@ public class Nations2 {
                                                                         nationData.startSiege(existingNation, enemyNation, player.serverLevel(), offset);
                                                                         gui2.close();
                                                                     } else {
-                                                                        player.sendSystemMessage(Component.literal(
-                                                                                "Can't start siege with nation members within 16 blocks of enemy claim"));
+                                                                        player.sendSystemMessage(ModComponents.TOO_CLOSE_TO_START_SIEGE);
                                                                     }
                                                                 }
                                                             });
@@ -564,7 +566,7 @@ public class Nations2 {
             if (siege != null) {
                 if (siege.isAttacking(player, nationData) && siege.shouldBlockAttackers() && TeamHandler.isPlayerNearClaim(player, siege.getClaimPos())) {
                     if (packet.hasPosition()) {
-                        player.sendSystemMessage(Component.literal("Can't move into enemy claim during start of siege"));
+                        player.sendSystemMessage(ModComponents.CANT_MOVE_INTO_CLAIM_STAGE_1);
                         Vec3 newPos = getNearestLegalPosition(player.position(), siege.getClaimPos(), 1);
                         packetHandler.teleport(newPos.x, newPos.y, newPos.z, player.getYRot(), player.getXRot());
                         return true;

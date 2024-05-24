@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class Nation {
 
     private String name;
+    private ChunkPos capitol;
     private final Object2IntMap<GameProfile> members = new Object2IntOpenHashMap<>();
     private final Set<ChunkPos> claimed = new HashSet<>();
     private int color = 0xffffff;
