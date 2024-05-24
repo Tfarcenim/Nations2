@@ -37,6 +37,10 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public void sendMessageToDiscord(String text) {
-        Messaging.sendToChannel(Concord.getBot().getDiscord(),text);
+        if (isModLoaded("concord")) {
+            if (Concord.isEnabled()) {
+                Messaging.sendToChannel(Concord.getBot().getDiscord(), text);
+            }
+        }
     }
 }

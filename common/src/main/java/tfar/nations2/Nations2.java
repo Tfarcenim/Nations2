@@ -26,6 +26,7 @@ import net.minecraft.world.item.Items;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tfar.nations2.sgui.api.elements.GuiElementBuilder;
+import tfar.nations2.sgui.api.gui.AnvilInputGui;
 import tfar.nations2.sgui.api.gui.SimpleGui;
 
 import java.util.ArrayList;
@@ -212,8 +213,7 @@ public class Nations2 {
             if (invitedTo != null) {
                 SimpleGui inviteGui = new SimpleGui(MenuType.HOPPER, player, false);
                 inviteGui.setTitle(Component.literal("Accept invite to " + invitedTo.getName() + " ?"));
-                inviteGui.setSlot(0, new GuiElementBuilder()
-                        .setItem(YES)
+                inviteGui.setSlot(0, new GuiElementBuilder(YES)
                         .setName(ModComponents.YES)
                         .setCallback((index, clickType, actionType) -> {
                             nationData.joinNation(invitedTo.getName(), List.of(player));
@@ -222,8 +222,7 @@ public class Nations2 {
                             inviteGui.close();
                         })
                 );
-                inviteGui.setSlot(4, new GuiElementBuilder()
-                        .setItem(NO)
+                inviteGui.setSlot(4, new GuiElementBuilder(NO)
                         .setName(ModComponents.NO)
                         .setCallback((index, clickType, actionType) -> {
                             nationData.removeInvite(player);
@@ -242,14 +241,27 @@ public class Nations2 {
                         .setName(ModComponents.YES)
                         .setCallback((index, clickType, actionType) -> {
 
-                            
+                            AnvilInputGui anvilInputGui = new AnvilInputGui(player,false);
+                            anvilInputGui.setTitle(Component.literal("Create Nation"));
+                            anvilInputGui.setDefaultInputValue(player.getGameProfile().getName());
+                            anvilInputGui.setSlot(2,new GuiElementBuilder(BLANK)
+                                    .setName(Component.literal("Click to set Nation name"))
+                                    .setCallback((index1, type, action) -> {
 
-                            ServerPlayer serverPlayer = gui.getPlayer();
-                            String name = serverPlayer.getGameProfile().getName();
-                            nationData.createNation(name);
-                            nationData.setOwner(name, serverPlayer);
-                            serverPlayer.sendSystemMessage(Component.literal("Created Nation " + name));
-                            gui.close();
+                                        ServerPlayer serverPlayer = anvilInputGui.getPlayer();
+                                        String name = anvilInputGui.getInput();
+                                        if (!name.isBlank()) {
+                                            nationData.createNation(name);
+                                            nationData.setOwner(name, serverPlayer);
+                                            serverPlayer.sendSystemMessage(Component.literal("Created Nation " + name));
+                                            anvilInputGui.close();
+                                        } else {
+                                            player.sendSystemMessage(Component.literal("Name can't be blank"));
+                                        }
+                                    })
+                            );
+
+                            anvilInputGui.open();
                         })
                 );
                 gui.setSlot(4, new GuiElementBuilder()
