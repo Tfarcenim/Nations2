@@ -241,6 +241,9 @@ public class Nations2 {
                         .setItem(YES)
                         .setName(ModComponents.YES)
                         .setCallback((index, clickType, actionType) -> {
+
+                            
+
                             ServerPlayer serverPlayer = gui.getPlayer();
                             String name = serverPlayer.getGameProfile().getName();
                             nationData.createNation(name);
@@ -293,10 +296,11 @@ public class Nations2 {
 
     private static void openTeamLeaderGui(NationData nationData, Nation existingNation, ServerPlayer player) {
         SimpleGui teamLeaderMenu = new SimpleGui(MenuType.GENERIC_9x1, player, false);
+        int slot = 0;
         teamLeaderMenu.setTitle(Component.literal("Nation Leader Menu"));
-        teamLeaderMenu.setSlot(0, new GuiElementBuilder()
+        teamLeaderMenu.setSlot(slot++, new GuiElementBuilder()
                 .setItem(Items.BARRIER)
-                .setName(Component.literal("Disband Nation"))
+                .setName(ModComponents.DISBAND_NATION)
                 .setCallback((index, clickType, actionType) -> {
                     SimpleGui confirmGui = new SimpleGui(MenuType.HOPPER, player, false);
                     confirmGui.setTitle(Component.literal("Disband Nation?"));
@@ -318,11 +322,11 @@ public class Nations2 {
                     confirmGui.open();
                 }));
 
-        teamLeaderMenu.setSlot(1, ServerButtons.managePlayersButton(player, nationData, existingNation));
-        teamLeaderMenu.setSlot(2,ServerButtons.claimChunksButton1(player, nationData, existingNation));
-        teamLeaderMenu.setSlot(3,ServerButtons.unClaimChunksButton1(player, nationData, existingNation));
+        teamLeaderMenu.setSlot(slot++, ServerButtons.managePlayersButton(player, nationData, existingNation));
+        teamLeaderMenu.setSlot(slot++,ServerButtons.claimChunksButton1(player, nationData, existingNation));
+        //teamLeaderMenu.setSlot(slot++,ServerButtons.unClaimChunksButton1(player, nationData, existingNation));
 
-        teamLeaderMenu.setSlot(4, new GuiElementBuilder()
+        teamLeaderMenu.setSlot(slot++, new GuiElementBuilder()
                 .setItem(Items.SHIELD)
                 .setName(ModComponents.NATION_POLITICS)
                 .setCallback((index, type, action, gui) -> {
@@ -454,10 +458,10 @@ public class Nations2 {
                 })
         );
 
-        teamLeaderMenu.setSlot(5, ServerButtons.topNationsButton(player, nationData));
-        teamLeaderMenu.setSlot(6, ServerButtons.onlinePlayersButton(player, nationData));
-        teamLeaderMenu.setSlot(7, new GuiElementBuilder(Items.RED_BANNER)
-                .setName(Component.literal("Declare Siege"))
+        teamLeaderMenu.setSlot(slot++, ServerButtons.topNationsButton(player, nationData));
+        teamLeaderMenu.setSlot(slot++, ServerButtons.onlinePlayersButton(player, nationData));
+        teamLeaderMenu.setSlot(slot++, new GuiElementBuilder(Items.RED_BANNER)
+                .setName(ModComponents.DECLARE_SIEGE)
                 .setCallback((index, type, action, gui) -> {
                     SimpleGui raidGui = new SimpleGui(MenuType.GENERIC_9x3, player, false);
                     raidGui.setTitle(ModComponents.SELECT_ENEMY_NATION);
@@ -482,7 +486,7 @@ public class Nations2 {
 
                                         if (percentage >= .5) {
                                             SimpleGui siege2Gui = new SimpleGui(MenuType.GENERIC_9x6, player, false);
-                                            siege2Gui.setTitle(Component.literal("Select Enemy Claim"));
+                                            siege2Gui.setTitle(ModComponents.SELECT_ENEMY_CLAIM);
                                             ChunkPos chunkPos = new ChunkPos(player.blockPosition());
                                             int i1 = 0;
                                             for (int z = -2; z < 4; z++) {
@@ -542,8 +546,6 @@ public class Nations2 {
 
         teamLeaderMenu.open();
     }
-
-    static final UnaryOperator<Style> NO_ITALIC = style -> style.withItalic(false);
 
     static List<ServerPlayer> getUninvitedPlayers(ServerPlayer leader, NationData nationData) {
         List<ServerPlayer> allPlayers = new ArrayList<>(leader.server.getPlayerList().getPlayers());

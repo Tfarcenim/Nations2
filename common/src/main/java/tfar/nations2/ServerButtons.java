@@ -313,7 +313,14 @@ public class ServerButtons {
         }
     }
 
+    static final Item MY_CLAIM = Items.GREEN_STAINED_GLASS_PANE;
+    static final Item OTHER_CLAIM = Items.RED_STAINED_GLASS_PANE;
+    static final Item WILDERNESS = Items.LIGHT_GRAY_STAINED_GLASS_PANE;
+    static final Item MY_CAPITOL = Items.CYAN_STAINED_GLASS_PANE;
+
     public static GuiElementBuilder claimChunksButton1(ServerPlayer player, NationData nationData, Nation existingNation) {
+
+
         return new GuiElementBuilder()
                 .setItem(Items.WHITE_BANNER)
                 .setName(ModComponents.CLAIM_LAND)
@@ -327,12 +334,12 @@ public class ServerButtons {
                             ChunkPos offset = new ChunkPos(chunkPos.x + x, chunkPos.z + z);
 
                             Nation claimed = nationData.getNationAtChunk(offset);
-                            Item icon = Items.LIGHT_GRAY_STAINED_GLASS_PANE;
+                            Item icon = WILDERNESS;
 
                             if (claimed != null) {
-                                if (claimed == existingNation) icon = Items.GREEN_STAINED_GLASS_PANE;
+                                if (claimed == existingNation) icon = MY_CLAIM;
                                 else {
-                                    icon = Items.RED_STAINED_GLASS_PANE;
+                                    icon = OTHER_CLAIM;
                                 }
                             }
 
@@ -347,11 +354,11 @@ public class ServerButtons {
                                         ItemStack stack = slot.getItemStack();
 
 
-                                        if (stack.is(Items.LIGHT_GRAY_STAINED_GLASS_PANE)) {
+                                        if (stack.is(WILDERNESS)) {
 
                                             boolean checkPower = existingNation.canClaim();
                                             if (checkPower) {
-                                                ItemStack newClaim = new ItemStack(Items.GREEN_STAINED_GLASS_PANE);
+                                                ItemStack newClaim = new ItemStack(MY_CLAIM);
                                                 if (glow) {
                                                     newClaim.enchant(Enchantments.UNBREAKING, 0);
                                                     newClaim.getTag().putByte(Nations2.TAG_HIDE_FLAGS, (byte) ItemStack.TooltipPart.ENCHANTMENTS.getMask());
@@ -359,13 +366,19 @@ public class ServerButtons {
                                                 newClaim.setHoverName(Component.literal(existingNation.getName() + " (" + offset.x + "," + offset.z + ")")
                                                         .withStyle(GuiHelpers.STYLE_CLEARER));
                                                 ((GuiElement) slot).setItemStack(newClaim);
+
+                                                if (existingNation.getClaimed().size() == 0) {
+                                                    nationData.setCapitol(existingNation,offset);
+                                                }
                                                 nationData.addClaim(existingNation, offset);
+
+
                                             } else {
                                                 player.sendSystemMessage(ModComponents.INSUFFICIENT_NATION_POWER);
                                             }
 
-                                        } else if (stack.is(Items.GREEN_STAINED_GLASS_PANE)) {
-                                            ItemStack wilderness = new ItemStack(Items.LIGHT_GRAY_STAINED_GLASS_PANE);
+                                        } else if (stack.is(MY_CLAIM)) {
+                                            ItemStack wilderness = new ItemStack(WILDERNESS);
 
                                             if (glow) {
                                                 wilderness.enchant(Enchantments.UNBREAKING, 0);
@@ -404,12 +417,12 @@ public class ServerButtons {
                             ChunkPos offset = new ChunkPos(chunkPos.x + x, chunkPos.z + z);
 
                             Nation claimed = nationData.getNationAtChunk(offset);
-                            Item icon = Items.LIGHT_GRAY_STAINED_GLASS_PANE;
+                            Item icon = WILDERNESS;
 
                             if (claimed != null) {
-                                if (claimed == existingNation) icon = Items.GREEN_STAINED_GLASS_PANE;
+                                if (claimed == existingNation) icon = MY_CLAIM;
                                 else {
-                                    icon = Items.RED_STAINED_GLASS_PANE;
+                                    icon = OTHER_CLAIM;
                                 }
                             }
 
@@ -424,8 +437,8 @@ public class ServerButtons {
                                         ItemStack stack = slot.getItemStack();
 
 
-                                        if (stack.is(Items.GREEN_STAINED_GLASS_PANE)) {
-                                            ItemStack wilderness = new ItemStack(Items.LIGHT_GRAY_STAINED_GLASS_PANE);
+                                        if (stack.is(MY_CLAIM)) {
+                                            ItemStack wilderness = new ItemStack(WILDERNESS);
 
                                             if (glow) {
                                                 wilderness.enchant(Enchantments.UNBREAKING, 0);
@@ -467,12 +480,12 @@ public class ServerButtons {
                             slotmap.put(index1,offset);
 
                             Nation claimed = nationData.getNationAtChunk(offset);
-                            Item icon = Items.LIGHT_GRAY_STAINED_GLASS_PANE;
+                            Item icon = WILDERNESS;
 
                             if (claimed != null) {
-                                if (claimed == existingNation) icon = Items.GREEN_STAINED_GLASS_PANE;
+                                if (claimed == existingNation) icon = MY_CLAIM;
                                 else {
-                                    icon = Items.RED_STAINED_GLASS_PANE;
+                                    icon = OTHER_CLAIM;
                                 }
                             }
 

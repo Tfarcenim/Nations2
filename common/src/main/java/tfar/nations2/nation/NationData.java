@@ -232,18 +232,26 @@ public class NationData extends SavedData {
         }
     }
 
-    public Nation addClaim(Nation nation,ChunkPos chunkPos) {
+    public void addClaim(Nation nation, ChunkPos chunkPos) {
         Nation existing = chunkLookup.get(chunkPos);
         if (existing == null) {
             nation.getClaimed().add(chunkPos);
             chunkLookup.put(chunkPos, nation);
             setDirty();
         }
-        return existing;
+    }
+
+    public void setCapitol(Nation nation,ChunkPos chunkPos) {
+        Nation existing = chunkLookup.get(chunkPos);
+        if (existing == null) {
+            nation.setCapitol(chunkPos);
+            setDirty();
+        }
     }
 
     public void removeClaim(Nation nation,ChunkPos chunkPos) {
         nation.getClaimed().remove(chunkPos);
+        nation.relocateCapitol();
         chunkLookup.remove(chunkPos);
         setDirty();
     }

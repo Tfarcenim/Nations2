@@ -29,5 +29,8 @@ public class ModComponents {
    public static final MutableComponent TOO_CLOSE_TO_START_SIEGE = Component.literal("Can't start siege with any nation members within 16 blocks of enemy claim");
 
    public static final MutableComponent SELECT_ENEMY_NATION = Component.literal("Select Enemy Nation");
+   public static final MutableComponent DISBAND_NATION = Component.literal("Disband Nation");
+   public static final MutableComponent DECLARE_SIEGE = Component.literal("Declare Siege");
+   public static final MutableComponent SELECT_ENEMY_CLAIM = Component.literal("Select Enemy Claim");
 
 }

@@ -75,6 +75,22 @@ public class Nation {
         return promotable;
     }
 
+    public void setCapitol(ChunkPos capitol) {
+        this.capitol = capitol;
+    }
+
+    public ChunkPos getCapitol() {
+        return capitol;
+    }
+
+    public void relocateCapitol() {
+        if (getClaimed().isEmpty()) {
+            capitol = null;
+        } else {
+
+        }
+    }
+
     public boolean tick(MinecraftServer server) {
         List<GameProfile> toKick = new ArrayList<>();
         for (GameProfile profile : getMembers()) {
