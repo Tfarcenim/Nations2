@@ -7,6 +7,8 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import tfar.nations2.platform.services.IPlatformHelper;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
+import tk.sciwhiz12.concord.Concord;
+import tk.sciwhiz12.concord.msg.Messaging;
 
 public class ForgePlatformHelper implements IPlatformHelper {
 
@@ -31,5 +33,10 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public ServerPlayer getFakePlayer(ServerLevel level, GameProfile gameProfile) {
         return FakePlayerFactory.get(level,gameProfile);
+    }
+
+    @Override
+    public void sendMessageToDiscord(String text) {
+        Messaging.sendToChannel(Concord.getBot().getDiscord(),text);
     }
 }

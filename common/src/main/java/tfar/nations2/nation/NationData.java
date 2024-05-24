@@ -12,6 +12,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.Nullable;
 import tfar.nations2.Nations2;
+import tfar.nations2.platform.Services;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,7 +27,11 @@ public class NationData extends SavedData {
     private final Map<UUID,Nation> invites = new HashMap<>();
     private final Map<Nation,Nation> allyInvites = new HashMap<>();
 
-    private MinecraftServer server;
+    private final MinecraftServer server;
+
+    public NationData(MinecraftServer server) {
+        this.server = server;
+    }
 
     @Nullable
     private Siege activeSiege;
@@ -42,7 +47,7 @@ public class NationData extends SavedData {
 
     public static NationData getOrCreateNationInstance(ServerLevel serverLevel) {
         return serverLevel.getDataStorage()
-                .computeIfAbsent(compoundTag -> loadStatic(compoundTag,serverLevel), NationData::new, Nations2.MOD_ID);
+                .computeIfAbsent(compoundTag -> loadStatic(compoundTag,serverLevel), () -> new NationData(serverLevel.getServer()), Nations2.MOD_ID);
     }
 
     public static NationData getOrCreateDefaultNationsInstance(MinecraftServer server) {
@@ -50,7 +55,7 @@ public class NationData extends SavedData {
     }
 
     public static NationData loadStatic(CompoundTag compoundTag,ServerLevel level) {
-        NationData id = new NationData();
+        NationData id = new NationData(level.getServer());
         id.load(compoundTag,level);
         return id;
     }
@@ -61,6 +66,8 @@ public class NationData extends SavedData {
         nation.setName(name);
         nations.add(nation);
         nationsLookup.put(name,nation);
+        Services.PLATFORM.sendMessageToDiscord(name +" was created");
+
         setDirty();
         return nation;
     }
@@ -117,6 +124,9 @@ public class NationData extends SavedData {
         toNation.getAllies().remove(fromNation.getName());
         updateRemoteTeams = true;
         setDirty();
+
+        Services.PLATFORM.sendMessageToDiscord(fromNation.getName()+" is now enemies with "+toNation.getName());
+
     }
 
     public void makeNeutral(MinecraftServer server,Nation fromNation,Nation toNation) {
@@ -127,6 +137,9 @@ public class NationData extends SavedData {
         toNation.getAllies().remove(fromNation.getName());
         updateRemoteTeams = true;
         setDirty();
+
+        Services.PLATFORM.sendMessageToDiscord(fromNation.getName()+" is now neutral with "+toNation.getName());
+
     }
 
     public void removeAllyInvite(Nation fromNation,Nation toNation) {
@@ -142,7 +155,7 @@ public class NationData extends SavedData {
         setDirty();
     }
 
-    public boolean removeNation(MinecraftServer server, String name) {
+    public boolean removeNation(String name) {
         Nation toRemove = nationsLookup.get(name);
         if (toRemove == null) return false;
 
@@ -183,6 +196,7 @@ public class NationData extends SavedData {
             level.getServer().getPlayerList().broadcastSystemMessage(Component.literal(attacking.getName()+" is starting a siege on "+defending.getName())
                     ,false);
             TeamHandler.sendMessageToTeam(level.getServer(),Component.literal("Warning, claim at ("+pos.x+","+pos.z+") is under attack!"),defending);
+            Services.PLATFORM.sendMessageToDiscord(attacking.getName() +" has declared war on "+defending.getName());
         }
     }
     public void tick(ServerLevel level) {
@@ -239,7 +253,6 @@ public class NationData extends SavedData {
         nationsLookup.clear();
         chunkLookup.clear();
         playerLookup.clear();
-        this.server = level.getServer();
         ListTag listTag = tag.getList(Nations2.MOD_ID, Tag.TAG_COMPOUND);
         for (Tag tag1 : listTag) {
             CompoundTag compoundTag = (CompoundTag) tag1;
@@ -271,6 +284,9 @@ public class NationData extends SavedData {
     public void createAllianceBetween(MinecraftServer server,Nation fromNation,Nation toNation) {
         fromNation.getAllies().add(toNation.getName());
         toNation.getAllies().add(fromNation.getName());
+
+        Services.PLATFORM.sendMessageToDiscord(fromNation.getName() +" and " + toNation.getName() + " have created an alliance");
+
         updateRemoteTeams = true;
         setDirty();
     }

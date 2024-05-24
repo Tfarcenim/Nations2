@@ -134,19 +134,17 @@ public class Nations2Forge {
         ChunkPos chunkPos = new ChunkPos(pos);
         if (player instanceof ServerPlayer serverPlayer) {
             NationData nationData = NationData.getOrCreateDefaultNationsInstance(serverPlayer.server);
-            Nation nationChunk = nationData.getNationAtChunk(chunkPos);
-            if (nationChunk == null) return;
-            if (state.is(ModTags.CLAIM_RESISTANT)) {
-                Nation nation = nationData.getNationOf(serverPlayer);
-                if (nationChunk == nation || nationChunk.isAlly(nation)) {
+            Nation nationAtChunk = nationData.getNationAtChunk(chunkPos);
+            if (nationAtChunk == null) return;
+            Nation nation = nationData.getNationOf(serverPlayer);
+            if (nationAtChunk == nation || nationAtChunk.isAlly(nation)) {
 
-                } else {
-                    Siege siege = nationData.getActiveSiege();
-                    if (siege != null && siege.getClaimPos().equals(chunkPos) && !siege.shouldBlockAttackers()) {
-                        return;
-                    }
-                    event.setCanceled(true);
+            } else {
+                Siege siege = nationData.getActiveSiege();
+                if (siege != null && siege.getClaimPos().equals(chunkPos) && !siege.shouldBlockAttackers()) {
+                    return;
                 }
+                event.setCanceled(true);
             }
         }
     }

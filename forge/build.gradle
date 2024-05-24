@@ -42,6 +42,17 @@ minecraft {
             }
         }
 
+        client2 {
+            parent runs.client
+            args '--username', 'Dev1'
+        }
+
+        client3 {
+            parent runs.client
+            args '--username', 'Dev2'
+        }
+
+
         server {
             workingDirectory project.file('run')
             ideaModule "${rootProject.name}.${project.name}.main"
@@ -85,7 +96,8 @@ dependencies {
 
    // implementation fg.deobf('com.github.sciwhiz12:Concord:v1.6.3+forgecraft.4')
 
-    implementation fileTree(dir: 'libs', include: '*.jar')
+    implementation fg.deobf("Concord:Concord:1.20.1-1.6.3+forgecraft.4")
+    //implementation files('libs/Concord-1.20.1-1.6.3+forgecraft.4.jar')
 
 
 }

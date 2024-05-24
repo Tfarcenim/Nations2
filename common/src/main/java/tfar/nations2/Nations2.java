@@ -22,8 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import tfar.nations2.level.OfflineTrackerData;
 import tfar.nations2.nation.*;
-import tfar.nations2.platform.Services;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Items;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +130,7 @@ public class Nations2 {
     private static int removeNation(CommandContext<CommandSourceStack> commandContext) {
         NationData nationData = getOverworldInstance(commandContext);
         String string = StringArgumentType.getString(commandContext, "name");
-        if (nationData.removeNation(commandContext.getSource().getServer(), string)) {
+        if (nationData.removeNation(string)) {
             commandContext.getSource().sendSuccess(() -> Component.literal("Removed " + string + " Nation"), true);
             return 1;
         }
@@ -199,7 +197,7 @@ public class Nations2 {
             ServerPlayer player = objectCommandContext.getSource().getPlayerOrException();
 
             if (player.serverLevel().dimension() != Level.OVERWORLD) {
-                player.sendSystemMessage(Component.literal("Can't use Nations outside of overworld"));
+                player.sendSystemMessage(ModComponents.NO_NATIONS_OUTSIDE_OF_OVERWORLD);
                 return 0;
             }
 
@@ -213,7 +211,7 @@ public class Nations2 {
                 inviteGui.setTitle(Component.literal("Accept invite to " + invitedTo.getName() + " ?"));
                 inviteGui.setSlot(0, new GuiElementBuilder()
                         .setItem(YES)
-                        .setName(Component.literal("Yes"))
+                        .setName(ModComponents.YES)
                         .setCallback((index, clickType, actionType) -> {
                             nationData.joinNation(invitedTo.getName(), List.of(player));
                             nationData.removeInvite(player);
@@ -235,10 +233,10 @@ public class Nations2 {
 
             if (existingNation == null) {
                 SimpleGui gui = new SimpleGui(MenuType.HOPPER, player, false);
-                gui.setTitle(Component.literal("Create Nation?"));
+                gui.setTitle(ModComponents.CREATE_NATION);
                 gui.setSlot(0, new GuiElementBuilder()
                         .setItem(YES)
-                        .setName(Component.literal("Yes"))
+                        .setName(ModComponents.YES)
                         .setCallback((index, clickType, actionType) -> {
                             ServerPlayer serverPlayer = gui.getPlayer();
                             String name = serverPlayer.getGameProfile().getName();
@@ -250,7 +248,7 @@ public class Nations2 {
                 );
                 gui.setSlot(4, new GuiElementBuilder()
                         .setItem(NO)
-                        .setName(Component.literal("No"))
+                        .setName(ModComponents.NO)
                         .setCallback((index, clickType, actionType) -> gui.close())
                 );
                 gui.open();
@@ -301,10 +299,10 @@ public class Nations2 {
                     confirmGui.setTitle(Component.literal("Disband Nation?"));
                     confirmGui.setSlot(0, new GuiElementBuilder()
                             .setItem(YES)
-                            .setName(Component.literal("Yes"))
+                            .setName(ModComponents.YES)
                             .setCallback((index1, clickType1, actionType1) -> {
                                 ServerPlayer serverPlayer = confirmGui.getPlayer();
-                                nationData.removeNation(player.server, existingNation.getName());
+                                nationData.removeNation(existingNation.getName());
                                 serverPlayer.sendSystemMessage(Component.literal("Disbanded Nation " + existingNation.getName()));
                                 confirmGui.close();
                             })
@@ -333,7 +331,7 @@ public class Nations2 {
                         inviteGui.setTitle(Component.literal("Accept alliance invite to " + allianceInvite.getName() + " ?"));
                         inviteGui.setSlot(0, new GuiElementBuilder()
                                 .setItem(YES)
-                                .setName(Component.literal("Yes"))
+                                .setName(ModComponents.YES)
                                 .setCallback((index1, clickType, actionType) -> {
                                     nationData.createAllianceBetween(player.server, allianceInvite, existingNation);
                                     nationData.removeAllyInvite(allianceInvite, existingNation);

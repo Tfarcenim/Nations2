@@ -9,6 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
+import tfar.nations2.ModComponents;
+import tfar.nations2.platform.Services;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -171,14 +173,17 @@ public class Siege {
         serverBossEvent.removeAllPlayers();
         switch (result) {
             case TERMINATED -> {
-                level.getServer().getPlayerList().broadcastSystemMessage(Component.literal("Siege has been terminated"),false);
+                level.getServer().getPlayerList().broadcastSystemMessage(ModComponents.SIEGE_TERMINATED,false);
             }
             case VICTORY -> {
-                level.getServer().getPlayerList().broadcastSystemMessage(Component.literal("Attackers are victorious"),false);
+                level.getServer().getPlayerList().broadcastSystemMessage(ModComponents.ATTACKERS_WIN,false);
                 nationData.awardNearbyClaimsToAttackers(attacking,defending,claimPos);
+                Services.PLATFORM.sendMessageToDiscord(attacking.getName() +" has won the siege against " + defending.getName());
             }
             case DEFEAT -> {
-                level.getServer().getPlayerList().broadcastSystemMessage(Component.literal("Attackers have been defeated"),false);
+                level.getServer().getPlayerList().broadcastSystemMessage(ModComponents.ATTACKERS_DEFEATED,false);
+                Services.PLATFORM.sendMessageToDiscord(attacking.getName() +" has lost the siege against " + defending.getName());
+
             }
         }
     }

@@ -40,4 +40,6 @@ public interface IPlatformHelper {
 
     ServerPlayer getFakePlayer(ServerLevel level, GameProfile gameProfile);
 
+    void sendMessageToDiscord(String text);
+
 }

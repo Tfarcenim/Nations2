@@ -18,6 +18,8 @@ public class Nations2ClientForge {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         dispatcher.register(Commands.literal("glow")
                 .executes(Nations2ClientForge::toggleGlow));
+        String s = tk.sciwhiz12.concord.Concord.MODID;
+
     }
 
     private static int toggleGlow(CommandContext<CommandSourceStack> commandContext) {
